@@ -66,6 +66,8 @@ static const char rcsid[] =
 #include <math.h>
 #include <sys/types.h>
 
+#include <iostream>
+
 #include "config.h"
 #include "delay.h"
 #include "flags.h"
@@ -658,53 +660,13 @@ void CHOKeQueue::enque(Packet* pkt) {
     int droptype = DTYPE_NONE;
     int qlen = qib_ ? q_->byteLength() : q_->length();
     int qlim = qib_ ? (qlim_ * edp_.mean_pktsize) : qlim_;
-    hdr_ip* iph = hdr_ip::access(pkt);
-    const int flowid = iph->flowid();
 
     curq_ = qlen;  // helps to trace queue during arrival, if enabled
 
-    // STEP 1: If ~q <= min_thresh, admit new packet
-    if (qavg <= edp_.th_min) {
-        edv_.v_prob = 0.0;
-        edv_.old = 0;
-    } else {
-        // STEP 2: Draw a random packet from the queue
-        Packet* pkt_random = pickPacketToDrop();
+    hdr_ip* iph = hdr_ip::access(pkt);
+    const int flowid = iph->flowid();
 
-        // STEP 3: Check if from same flow.
-        hdr_ip* rand_iph = hdr_ip::access(pkt_random);
-        const int rand_flowid = rand_iph->flowid();
-
-        if (flowid == rand_flowid) {
-            // STEP 4: DROP BOTH
-            q_->remove(pkt_random);
-            reportDrop(pkt_random);
-            drop(pkt_random);
-
-            edv_.v_prob = 1.0;
-            droptype = DTYPE_UNFORCED;
-
-            if (!ns1_compat_) {
-                // bug-fix from Philip Liu, <phill@ece.ubc.ca>
-                edv_.count = 0;
-                edv_.count_bytes = 0;
-            }
-        } else if (qavg <= edp_.th_max) {
-            if (drop_early(pkt)) {
-                droptype = DTYPE_UNFORCED;
-            } else {
-                // Do not drop packet otherwise
-                edv_.v_prob = 0.0;
-                edv_.old = 0;
-            }
-        } else {
-            // Drop if above threshold
-            edv_.v_prob = 1.0;
-
-            droptype = DTYPE_UNFORCED;
-        }
-    }
-
+    // std::cout << "Received packet for flow id: " << flowid << std::endl;
     if (qavg >= edp_.th_min && qlen > 1) {
         if (!edp_.use_mark_p && ((!edp_.gentle && qavg >= edp_.th_max) ||
                                  (edp_.gentle && qavg >= 2 * edp_.th_max))) {
@@ -716,6 +678,7 @@ void CHOKeQueue::enque(Packet* pkt) {
              * from above "minthresh" with an empty queue to
              * above "minthresh" with a nonempty queue.
              */
+            // std::cout << "Bookkeeping mark" << std::endl;
             edv_.count = 1;
             edv_.count_bytes = ch->size();
             edv_.old = 1;
@@ -725,20 +688,116 @@ void CHOKeQueue::enque(Packet* pkt) {
         // }
     } else {
         /* No packets are being dropped.  */
+        // std::cout << "RED would not drop this packet" << std::endl;
         edv_.v_prob = 0.0;
         edv_.old = 0;
     }
     if (qlen >= qlim) {
         // see if we've exceeded the queue size
         droptype = DTYPE_FORCED;
+        // std::cout << "Forced queue length drop of packet" << std::endl;
+    }
+    if (droptype == DTYPE_NONE) {
+        // STEP 1: If ~q <= min_thresh, admit new packet
+        if (qavg <= edp_.th_min || !q_->byteLength()) {
+            // std::cout << "Admitting packet for qavg: " << qavg
+            //           << " and th_min: " << edp_.th_min << std::endl;
+            // Admit packet (i.e. p = 0)
+            edv_.v_prob = 0.0;
+            edv_.old = 0;
+        } else {
+            // std::cout << "Potentially dropping packet with queue length: "
+            //           << q_->length() << " and th_min: " << edp_.th_min
+            //           << " and qavg: " << qavg << std::endl;
+            // STEP 2: Draw a random packet from the queue
+            Packet* pkt_random = pickPacketToDrop();
+
+            // STEP 3: Check if from same flow.
+            hdr_ip* rand_iph = hdr_ip::access(pkt_random);
+            const int rand_flowid = rand_iph->flowid();
+
+            // std::cout << "Flow id: " << flowid
+            //           << " vs rand flow id: " << rand_flowid << std::endl;
+
+            if (flowid == rand_flowid) {
+                // STEP 4: DROP BOTH
+                // std::cout << "Dropping both!" << std::endl;
+                q_->remove(pkt_random);
+                reportDrop(pkt_random);
+                drop(pkt_random);
+
+                edv_.v_prob = 1.0;
+                droptype = DTYPE_UNFORCED;
+
+                if (!ns1_compat_) {
+                    // bug-fix from Philip Liu, <phill@ece.ubc.ca>
+                    edv_.count = 0;
+                    edv_.count_bytes = 0;
+                }
+            } else if (qavg <= edp_.th_max) {
+                if (drop_early(pkt)) {
+                    droptype = DTYPE_UNFORCED;
+                } else {
+                    // Do not drop packet otherwise
+                    edv_.v_prob = 0.0;
+                    edv_.old = 0;
+                }
+            } else {
+                // std::cout << "Above threshold!" << std::endl;
+                // Drop if above threshold
+                edv_.v_prob = 1.0;
+
+                droptype = DTYPE_UNFORCED;
+            }
+        }
     }
 
-    if (droptype != DTYPE_NONE) {
+    if (droptype == DTYPE_UNFORCED) {
+        /* pick packet for ECN, which is dropping in this case */
+        Packet* pkt_to_drop = pickPacketForECN(pkt);
+        /*
+         * If the packet picked is different that the one that just arrived,
+         * add it to the queue and remove the chosen packet.
+         */
+        if (pkt_to_drop != pkt) {
+            q_->enque(pkt);
+            q_->remove(pkt_to_drop);
+            pkt = pkt_to_drop; /* XXX okay because pkt is not needed anymore */
+        }
+
+        // deliver to special "edrop" target, if defined
+        if (de_drop_ != NULL) {
+            // trace first if asked
+            //  if no snoop object (de_drop_) is defined,
+            //  this packet will not be traced as a special case.
+            if (EDTrace != NULL) ((Trace*)EDTrace)->recvOnly(pkt);
+
+            reportDrop(pkt);
+            de_drop_->recv(pkt);
+        } else {
+            reportDrop(pkt);
+            drop(pkt);
+        }
+    } else {
+        /* forced drop, or not a drop: first enqueue pkt */
         q_->enque(pkt);
-        q_->remove(pkt);
-        reportDrop(pkt);
-        drop(pkt);
+
+        /* drop a packet if we were told to */
+        if (droptype == DTYPE_FORCED) {
+            /* drop random victim or last one */
+            pkt = pickPacketToDrop();
+            q_->remove(pkt);
+            reportDrop(pkt);
+            drop(pkt);
+            if (!ns1_compat_) {
+                // bug-fix from Philip Liu, <phill@ece.ubc.ca>
+                edv_.count = 0;
+                edv_.count_bytes = 0;
+            }
+        }
     }
+
+    // std::cout << "End of admit logic for packet" << std::endl;
 
     // if (droptype == DTYPE_UNFORCED) {
     // 	/* pick packet for ECN, which is dropping in this case */

@@ -211,17 +211,17 @@ Queue/RED/PD set unresponsive_penalty_ 1
 Queue/RED/PD set P_testFRp_ -1
 Queue/RED/PD set noidle_ false
 
-Queue/CHOKe set bytes_ true ;		# default changed on 10/11/2004.
-Queue/CHOKe set queue_in_bytes_ true ;	# default changed on 10/11/2004.
+Queue/CHOKe set bytes_ false ;		# default changed on 10/11/2004.
+Queue/CHOKe set queue_in_bytes_ false ;	# default changed on 10/11/2004.
 # Queue/CHOKe set thresh_ 5
-Queue/CHOKe set thresh_ 0
+Queue/CHOKe set thresh_ 30
 # Queue/CHOKe/thresh_ was changed on 12/29/01, for automatic configuration.
 # Queue/CHOKe set maxthresh_ 15
-Queue/CHOKe set maxthresh_ 0
+Queue/CHOKe set maxthresh_ 60
 # Queue/CHOKe/maxthresh_ was changed on 12/29/01, for automatic configuration.
-Queue/CHOKe set thresh_queue_ [Queue set limit_]
+Queue/CHOKe set thresh_queue_ 30
 # Note from Sally: I don't see that thresh_queue_ is used for anything.
-Queue/CHOKe set maxthresh_queue_ [Queue set limit_]
+Queue/CHOKe set maxthresh_queue_ 60
 # Note from Sally: I don't see that maxthresh_queue_ is used for anything.
 Queue/CHOKe set mean_pktsize_ 500
 Queue/CHOKe set idle_pktsize_ 100

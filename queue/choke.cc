@@ -667,9 +667,10 @@ void CHOKeQueue::enque(Packet* pkt) {
     const int flowid = iph->flowid();
 
     // std::cout << "Received packet for flow id: " << flowid << std::endl;
-    if (qavg >= edp_.th_min && qlen > 1) {
+    if (qavg > edp_.th_min && qlen >= 1) {
         if (!edp_.use_mark_p && ((!edp_.gentle && qavg >= edp_.th_max) ||
                                  (edp_.gentle && qavg >= 2 * edp_.th_max))) {
+            // if (false) {
             droptype = DTYPE_FORCED;
         } else if (edv_.old == 0) {
             /*
@@ -683,32 +684,7 @@ void CHOKeQueue::enque(Packet* pkt) {
             edv_.count_bytes = ch->size();
             edv_.old = 1;
         }
-        // else if (drop_early(pkt)) {
-        // 	droptype = DTYPE_UNFORCED;
-        // }
-    } else {
-        /* No packets are being dropped.  */
-        // std::cout << "RED would not drop this packet" << std::endl;
-        edv_.v_prob = 0.0;
-        edv_.old = 0;
-    }
-    if (qlen >= qlim) {
-        // see if we've exceeded the queue size
-        droptype = DTYPE_FORCED;
-        // std::cout << "Forced queue length drop of packet" << std::endl;
-    }
-    if (droptype == DTYPE_NONE) {
-        // STEP 1: If ~q <= min_thresh, admit new packet
-        if (qavg <= edp_.th_min || !q_->byteLength()) {
-            // std::cout << "Admitting packet for qavg: " << qavg
-            //           << " and th_min: " << edp_.th_min << std::endl;
-            // Admit packet (i.e. p = 0)
-            edv_.v_prob = 0.0;
-            edv_.old = 0;
-        } else {
-            // std::cout << "Potentially dropping packet with queue length: "
-            //           << q_->length() << " and th_min: " << edp_.th_min
-            //           << " and qavg: " << qavg << std::endl;
+        {
             // STEP 2: Draw a random packet from the queue
             Packet* pkt_random = pickPacketToDrop();
 
@@ -726,7 +702,6 @@ void CHOKeQueue::enque(Packet* pkt) {
                 reportDrop(pkt_random);
                 drop(pkt_random);
 
-                edv_.v_prob = 1.0;
                 droptype = DTYPE_UNFORCED;
 
                 if (!ns1_compat_) {
@@ -739,18 +714,28 @@ void CHOKeQueue::enque(Packet* pkt) {
                     droptype = DTYPE_UNFORCED;
                 } else {
                     // Do not drop packet otherwise
-                    edv_.v_prob = 0.0;
-                    edv_.old = 0;
                 }
             } else {
+                // If qavg is above th_max
                 // std::cout << "Above threshold!" << std::endl;
                 // Drop if above threshold
-                edv_.v_prob = 1.0;
-
                 droptype = DTYPE_UNFORCED;
             }
         }
+        // else if (drop_early(pkt)) {
+        // 	droptype = DTYPE_UNFORCED;
+        // }
+    } else {
+        /* No packets are being dropped.  */
+        // std::cout << "RED would not drop this packet" << std::endl;
+        edv_.v_prob = 0.0;
+        edv_.old = 0;
     }
+    // if (qlen >= qlim) {
+    //     // see if we've exceeded the queue size
+    //     droptype = DTYPE_FORCED;
+    //     // std::cout << "Forced queue length drop of packet" << std::endl;
+    // }
 
     if (droptype == DTYPE_UNFORCED) {
         /* pick packet for ECN, which is dropping in this case */

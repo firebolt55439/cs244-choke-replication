@@ -237,9 +237,9 @@ Queue/CHOKe set use_mark_p_ true
 Queue/CHOKe set setbit_ false
 Queue/CHOKe set gentle_ true
 ### Queue/CHOKe/gentle_ was changed from false to true on Apr 23, 2001.
-Queue/CHOKe set drop_tail_ true
+Queue/CHOKe set drop_tail_ false
 Queue/CHOKe set drop_front_ false
-Queue/CHOKe set drop_rand_ false
+Queue/CHOKe set drop_rand_ true
 Queue/CHOKe set doubleq_ false
 Queue/CHOKe set ns1_compat_ false
 Queue/CHOKe set dqthresh_ 50

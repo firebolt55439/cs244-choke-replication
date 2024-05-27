@@ -235,7 +235,7 @@ Queue/CHOKe set use_mark_p_ true
 # Queue/CHOKe/use_mark_p_ was added on 11/23/05.
 # Queue/CHOKe/use_mark_p_ was changed to true on 12/22/05.
 Queue/CHOKe set setbit_ false
-Queue/CHOKe set gentle_ true
+Queue/CHOKe set gentle_ false
 ### Queue/CHOKe/gentle_ was changed from false to true on Apr 23, 2001.
 Queue/CHOKe set drop_tail_ false
 Queue/CHOKe set drop_front_ false

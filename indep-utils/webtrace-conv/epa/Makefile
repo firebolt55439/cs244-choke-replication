@@ -1,7 +1,7 @@
-#
+# 
 #  Copyright (c) 1999 by the University of Southern California
 #  All rights reserved.
-#
+# 
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License,
 #  version 2, as published by the Free Software Foundation.
@@ -42,17 +42,17 @@
 # $Header: /cvsroot/nsnam/ns-2/indep-utils/webtrace-conv/epa/Makefile.in,v 1.6 2005/09/16 03:05:40 tomh Exp $
 
 # Top level hierarchy
-prefix  = /usr/local
+prefix  = /tmp/ns-prefix
 # Pathname of directory to install the binary
-BINDEST = /usr/local/bin
+BINDEST = /tmp/ns-prefix/bin
 
 CC = g++
 MKDEP	= ../../../conf/mkdep
 
-INCLUDE = -I. -I/Users/sumer/Downloads/ns-allinone-2.35/tclcl-1.20 -I/Users/sumer/Downloads/ns-allinone-2.35/otcl-1.14 -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/ns-2.35/pcap
+INCLUDE = -I. -I/Users/sumer/Downloads/ns-allinone-2.35/tclcl-1.20 -I/Users/sumer/Downloads/ns-allinone-2.35/otcl-1.14 -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/GitHub/cs244-choke-replication/pcap
 CFLAGS =  -Wall -Wno-write-strings -DCPP_NAMESPACE=std
-LDFLAGS =
-LIBS = -L/Users/sumer/Downloads/ns-allinone-2.35/lib -ltcl8.5  -lpcap -lm  -framework Cocoa
+LDFLAGS = 
+LIBS = -L/Users/sumer/Downloads/ns-allinone-2.35/lib -ltcl8.5  -lpcap -lm -framework Cocoa 
 INSTALL = /opt/homebrew/bin/ginstall -c
 
 SRC = tr-stat.cc
@@ -68,11 +68,11 @@ install: epa-tr-stat
 
 .SUFFIXES: .cc
 
-.cc.o:
+.cc.o: 
 	@rm -f $@
 	$(CC) -c $(CFLAGS) $(INCLUDE) -o $@ $*.cc
 
-clean:
+clean: 
 	@rm -f *~ *.o epa-tr-stat *core
 
 depend: $(SRC)

@@ -44,15 +44,15 @@
 # $Header: /cvsroot/nsnam/ns-2/indep-utils/webtrace-conv/nlanr/Makefile.in,v 1.8 2005/09/16 03:05:41 tomh Exp $
 
 # Top level hierarchy
-prefix  = /usr/local
+prefix  = /tmp/ns-prefix
 # Pathname of directory to install the binary
-BINDEST = /usr/local/bin
+BINDEST = /tmp/ns-prefix/bin
 
 CC = g++
-INCLUDE = -I. -I../../.. -I/Users/sumer/Downloads/ns-allinone-2.35/tclcl-1.20 -I/Users/sumer/Downloads/ns-allinone-2.35/otcl-1.14 -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/ns-2.35/pcap
+INCLUDE = -I. -I../../.. -I/Users/sumer/Downloads/ns-allinone-2.35/tclcl-1.20 -I/Users/sumer/Downloads/ns-allinone-2.35/otcl-1.14 -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/GitHub/cs244-choke-replication/pcap
 CFLAGS =  -Wall -Wno-write-strings -DCPP_NAMESPACE=std
 LDFLAGS = 
-LIBS = -L/Users/sumer/Downloads/ns-allinone-2.35/lib -ltcl8.5  -lpcap -lm -framework Cocoa
+LIBS = -L/Users/sumer/Downloads/ns-allinone-2.35/lib -ltcl8.5  -lpcap -lm -framework Cocoa 
 INSTALL = /opt/homebrew/bin/ginstall -c
 
 SRC = tr-stat.cc logparse.cc

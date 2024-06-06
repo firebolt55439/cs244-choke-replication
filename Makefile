@@ -24,11 +24,11 @@
 #
 
 # Top level hierarchy
-prefix	= /Users/sumer/Downloads/ns-allinone-2.35/prefix
+prefix	= /tmp/ns-prefix
 # Pathname of directory to install the binary
-BINDEST	= /Users/sumer/Downloads/ns-allinone-2.35/prefix/ns2
+BINDEST	= /tmp/ns-prefix/bin
 # Pathname of directory to install the man page
-MANDEST	= /Users/sumer/Downloads/ns-allinone-2.35/prefix/man
+MANDEST	= /tmp/ns-prefix/man
 
 BLANK	= # make a blank space.  DO NOT add anything to this line
 
@@ -36,10 +36,10 @@ BLANK	= # make a blank space.  DO NOT add anything to this line
 CC	= gcc
 CPP	= g++
 LINK	= $(CPP)
-LINK_SHLIB =
+LINK_SHLIB = 
 MKDEP	= ./conf/mkdep
 TCLSH	= /Users/sumer/Downloads/ns-allinone-2.35/bin/tclsh8.5
-TCL2C	= ../tclcl-1.20/tcl2c++
+TCL2C	= /Users/sumer/Downloads/ns-allinone-2.35/tclcl-1.20/tcl2c++
 AR	= ar rc $(BLANK)
 
 RANLIB	= ranlib
@@ -53,10 +53,10 @@ PERL	= /usr/bin/perl
 # for diffusion
 #DIFF_INCLUDES = "./diffusion3/main ./diffusion3/lib ./diffusion3/nr ./diffusion3/ns"
 
-CCOPT	=  -Wall -Wno-write-strings
-STATIC	=
+CCOPT	=  -Wall -Wno-write-strings 
+STATIC	= 
 #LDFLAGS	= $(STATIC)
-LDFLAGS	=
+LDFLAGS	=  
 LDOUT	= -o $(BLANK)
 
 DEFINE	= -DTCP_DELAY_BIND_ALL -DNO_TK -DTCLCL_CLASSINSTVAR  -DNDEBUG -DUSE_SHM -DHAVE_LIBTCLCL -DHAVE_TCLCL_H -DHAVE_LIBOTCL1_14 -DHAVE_OTCL_H -DHAVE_LIBTK8_5 -DHAVE_TK_H -DHAVE_LIBTCL8_5 -DHAVE_TCLINT_H -DHAVE_TCL_H  -DHAVE_CONFIG_H -DNS_DIFFUSION -DSMAC_NO_SYNC -DCPP_NAMESPACE=std -DUSE_SINGLE_ADDRESS_SPACE -Drng_test
@@ -64,7 +64,7 @@ DEFINE	= -DTCP_DELAY_BIND_ALL -DNO_TK -DTCLCL_CLASSINSTVAR  -DNDEBUG -DUSE_SHM -
 INCLUDES = \
 	-I. -I/usr/X11R6/include \
 	-I. \
-	-I/Users/sumer/Downloads/ns-allinone-2.35/tclcl-1.20 -I/Users/sumer/Downloads/ns-allinone-2.35/otcl-1.14 -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/ns-2.35/pcap \
+	-I/Users/sumer/Downloads/ns-allinone-2.35/tclcl-1.20 -I/Users/sumer/Downloads/ns-allinone-2.35/otcl-1.14 -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/GitHub/cs244-choke-replication/pcap \
 	-I./tcp -I./sctp -I./common -I./link -I./queue \
 	-I./adc -I./apps -I./mac -I./mobile -I./trace \
 	-I./routing -I./tools -I./classifier -I./mcast \
@@ -79,10 +79,10 @@ LIB	= \
 	-L/Users/sumer/Downloads/ns-allinone-2.35/tclcl-1.20 -ltclcl -L/Users/sumer/Downloads/ns-allinone-2.35/otcl-1.14 -lotcl -L/Users/sumer/Downloads/ns-allinone-2.35/lib -ltk8.5 -L/Users/sumer/Downloads/ns-allinone-2.35/lib -ltcl8.5 \
 	-L/usr/X11R6/lib -lXext -lX11 \
 	 -lpcap \
-	-lm -framework Cocoa
+	-lm -lm -framework Cocoa 
 #	-L${exec_prefix}/lib \
 
-CFLAGS	+= $(CCOPT) $(DEFINE)
+CFLAGS	+= $(CCOPT) $(DEFINE) 
 
 # Explicitly define compilation rules since SunOS 4's make doesn't like gcc.
 # Also, gcc does not remove the .o before forking 'as', which can be a
@@ -108,7 +108,7 @@ NSTK = nstk
 
 # To allow conf/makefile.win overwrite this macro
 # We will set these two macros to empty in conf/makefile.win since VC6.0
-# does not seem to support the STL in gcc 2.8 and up.
+# does not seem to support the STL in gcc 2.8 and up. 
 OBJ_STL = diffusion3/lib/nr/nr.o diffusion3/lib/dr.o \
 	diffusion3/filters/diffusion/one_phase_pull.o \
 	diffusion3/filters/diffusion/two_phase_pull.o \
@@ -217,12 +217,11 @@ OBJ_CC = \
 	tools/integrator.o tools/queue-monitor.o \
 	tools/flowmon.o tools/loss-monitor.o \
 	queue/queue.o queue/drop-tail.o \
-	adc/simple-intserv-sched.o queue/red.o \
+	adc/simple-intserv-sched.o queue/red.o queue/choke.o \
 	queue/semantic-packetqueue.o queue/semantic-red.o \
 	tcp/ack-recons.o \
 	queue/sfq.o queue/fq.o queue/drr.o queue/srr.o queue/cbq.o \
 	queue/jobs.o queue/marker.o queue/demarker.o \
-	queue/choke.o \
 	link/hackloss.o queue/errmodel.o queue/fec.o\
 	link/delay.o tcp/snoop.o \
 	gaf/gaf.o \
@@ -378,7 +377,7 @@ OBJ_GEN = $(GEN_DIR)version.o $(GEN_DIR)ns_tcl.o $(GEN_DIR)ptypes.o
 
 SRC =	$(OBJ_C:.o=.c) $(OBJ_CC:.o=.cc) \
 	$(OBJ_EMULATE_C:.o=.c) $(OBJ_EMULATE_CC:.o=.cc) \
-	common/tclAppInit.cc common/tkAppInit.cc
+	common/tclAppInit.cc common/tkAppInit.cc 
 
 OBJ =	$(OBJ_C) $(OBJ_CC) $(OBJ_GEN) $(OBJ_COMPAT)
 
@@ -386,7 +385,7 @@ CLEANFILES = ns nse nsx ns.dyn $(OBJ) $(OBJ_EMULATE_CC) \
 	$(OBJ_EMULATE_C) common/tclAppInit.o common/main-monolithic.o \
 	common/tkAppInit.o nstk \
 	$(GEN_DIR)* $(NS).core core core.$(NS) core.$(NSX) core.$(NSE) \
-	common/ptypes2tcl common/ptypes2tcl.o
+	common/ptypes2tcl common/ptypes2tcl.o 
 
 SUBDIRS=\
 	indep-utils/cmu-scen-gen/setdest \
@@ -395,7 +394,7 @@ SUBDIRS=\
 	indep-utils/webtrace-conv/nlanr \
 	indep-utils/webtrace-conv/ucb
 
-BUILD_NSE =
+BUILD_NSE = 
 
 all: $(NS) $(BUILD_NSE) $(NSTK) all-recursive Makefile
 
@@ -410,29 +409,29 @@ ifeq ($(NSLIB),libns.dll)
 
 # This is for cygwin
 
-NS_CPPFLAGS = -DNSLIBNAME=\"$(NSLIB)\"
-NS_LIBS =
+NS_CPPFLAGS = -DNSLIBNAME=\"$(NSLIB)\" 
+NS_LIBS =  
 
-$(NSLIB): $(OBJ) common/tclAppInit.o
+$(NSLIB): $(OBJ) common/tclAppInit.o 
 	$(LINK) -shared $(LDFLAGS) \
 		$(LDOUT)$@  \
 		-Wl,--export-all-symbols \
 		-Wl,--enable-auto-import \
 		-Wl,--out-implib=$@.a \
 		-Wl,--whole-archive $^ \
-		-Wl,--no-whole-archive
+		-Wl,--no-whole-archive  
 
-$(NS): $(NSLIB) common/main-modular.cc
+$(NS): $(NSLIB) common/main-modular.cc 
 	$(LINK) $(NS_CPPFLAGS) $(LDFLAGS) $(LDOUT)$@ common/main-modular.cc $(NS_LIBS)
 
-else
+else 
 
 # default for all systems but cygwin
 
 $(NS): $(OBJ) common/tclAppInit.o common/main-monolithic.o
 	$(LINK) $(LDFLAGS) $(LDOUT)$@ $^ $(LIB)
 
-endif
+endif 
 
 
 
@@ -442,16 +441,16 @@ Makefile: Makefile.in
 	false
 
 $(NSE): $(OBJ) common/tclAppInit.o common/main-monolithic.o $(OBJ_EMULATE_CC) $(OBJ_EMULATE_C)
+	$(LINK) $(LDFLAGS) $(LDOUT)$@ $^ $(LIB) 
+
+$(NSTK): $(OBJ) common/tkAppInit.o 
 	$(LINK) $(LDFLAGS) $(LDOUT)$@ $^ $(LIB)
 
-$(NSTK): $(OBJ) common/tkAppInit.o
-	$(LINK) $(LDFLAGS) $(LDOUT)$@ $^ $(LIB)
-
-ns.dyn: $(OBJ) common/tclAppInit.o common/main-monolithic.o
+ns.dyn: $(OBJ) common/tclAppInit.o common/main-monolithic.o 
 	$(LINK) $(LDFLAGS) -o $@ $^ $(LIB)
 
 PURIFY	= purify -cache-dir=/tmp
-ns-pure: $(OBJ) common/tclAppInit.o common/main-monolithic.o
+ns-pure: $(OBJ) common/tclAppInit.o common/main-monolithic.o 
 	$(PURIFY) $(LINK) $(LDFLAGS) -o $@ $^ $(LIB)
 
 NS_TCL_LIB = \
@@ -530,9 +529,9 @@ NS_TCL_LIB = \
 $(GEN_DIR)ns_tcl.cc: $(NS_TCL_LIB)
 	$(TCLSH) bin/tcl-expand.tcl tcl/lib/ns-lib.tcl $(NS_TCL_LIB_STL) | $(TCL2C) et_ns_lib > $@
 
-$(GEN_DIR)version.c: version_
+$(GEN_DIR)version.c: VERSION2
 	$(RM) $@
-	$(TCLSH) bin/string2c.tcl version_string < version_ > $@
+	$(TCLSH) bin/string2c.tcl version_string < VERSION2 > $@
 
 $(GEN_DIR)ptypes.cc: common/ptypes2tcl common/packet.h
 	./common/ptypes2tcl > $@
@@ -580,7 +579,7 @@ distclean-recursive:
 tags:	force
 	ctags -wtd *.cc *.h webcache/*.cc webcache/*.h dsdv/*.cc dsdv/*.h \
 	dsr/*.cc dsr/*.h webcache/*.cc webcache/*.h lib/*.cc lib/*.h \
-	../Tcl/*.cc ../Tcl/*.h
+	../Tcl/*.cc ../Tcl/*.h 
 
 TAGS:	force
 	etags *.cc *.h webcache/*.cc webcache/*.h dsdv/*.cc dsdv/*.h \
@@ -600,8 +599,8 @@ depend: $(SRC)
 
 srctar:
 	@cwd=`pwd` ; dir=`basename $$cwd` ; \
-	    name=ns-`cat VERSION | tr A-Z a-z` ; \
-	    tar=ns-src-`cat VERSION`.tar.gz ; \
+	    name=ns-`cat VERSION2 | tr A-Z a-z` ; \
+	    tar=ns-src-`cat VERSION2`.tar.gz ; \
 	    list="" ; \
 	    for i in `cat FILES` ; do list="$$list $$name/$$i" ; done; \
 	    echo \

@@ -1,6 +1,6 @@
 CC=gcc
 DFLAGS= -g
-LIB=-lm  -framework Cocoa
+LIB=-lm -framework Cocoa -framework Cocoa -framework Cocoa  -framework Cocoa
 
 all : dosdbell dosdbellasim
 

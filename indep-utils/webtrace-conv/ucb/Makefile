@@ -1,5 +1,5 @@
 # COPYRIGHT AND DISCLAIMER
-#
+# 
 # Copyright (C) 1996-1997 by the Regents of the University of California.
 # Copyright (c) 1999 by the University of Southern California
 #
@@ -7,7 +7,7 @@
 # DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT
 # OF THE USE OF THIS SOFTWARE, ITS DOCUMENTATION, OR ANY DERIVATIVES THEREOF,
 # EVEN IF THE AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
+# 
 # THE AUTHORS AND DISTRIBUTORS SPECIFICALLY DISCLAIM ANY WARRANTIES,
 # INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. THIS SOFTWARE IS
@@ -20,17 +20,17 @@
 # $Header: /cvsroot/nsnam/ns-2/indep-utils/webtrace-conv/ucb/Makefile.in,v 1.4 2004/05/18 15:10:42 johnh Exp $
 
 # Top level hierarchy
-prefix  = /usr/local
+prefix  = /tmp/ns-prefix
 # Pathname of directory to install the binary
-BINDEST = /usr/local/bin
+BINDEST = /tmp/ns-prefix/bin
 
 CC = g++
 MKDEP	= ../../../conf/mkdep
 
-INCLUDE = -I. -I/Users/sumer/Downloads/ns-allinone-2.35/tclcl-1.20 -I/Users/sumer/Downloads/ns-allinone-2.35/otcl-1.14 -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/ns-2.35/pcap
+INCLUDE = -I. -I/Users/sumer/Downloads/ns-allinone-2.35/tclcl-1.20 -I/Users/sumer/Downloads/ns-allinone-2.35/otcl-1.14 -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/Downloads/ns-allinone-2.35/include -I/Users/sumer/GitHub/cs244-choke-replication/pcap
 CFLAGS =  -Wall -Wno-write-strings -DCPP_NAMESPACE=std
-LDFLAGS =
-LIBS = -L/Users/sumer/Downloads/ns-allinone-2.35/lib -ltcl8.5  -lpcap -lm  -framework Cocoa
+LDFLAGS = 
+LIBS = -L/Users/sumer/Downloads/ns-allinone-2.35/lib -ltcl8.5  -lpcap -lm -framework Cocoa 
 INSTALL = /opt/homebrew/bin/ginstall -c
 
 SRC = tr-stat.cc logparse.cc utils.cc
@@ -46,7 +46,7 @@ install: ucb-tr-stat
 
 .SUFFIXES: .cc
 
-.cc.o:
+.cc.o: 
 	@rm -f $@
 	$(CC) -c $(CFLAGS) $(INCLUDE) -o $@ $*.cc
 

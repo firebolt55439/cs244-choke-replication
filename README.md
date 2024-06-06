@@ -2,7 +2,7 @@
 
 This repo contains a fork of ns-2 (a widely used network simulator) that contains an implementation of CHOKe per its defining paper, for the purposes of replicating a key result (Figure 6) from that paper.
 
-## Instructions
+## Installation Instructions
 
 You have a choice in installation process. You can either begin from the NS-2 all-in-one distribution, or you can install the minimum prerequisites (TCL and OTCL) of the appropriate versions and use those.
 
@@ -41,3 +41,13 @@ $ ./update-macos-makefile.sh
 ```
 
 after the `./configure <...>` command runs. Note that this is not an idempotent operation, so do not run this script more than once. You will need to rerun it every time the `Makefile`s are regenerated (i.e. by `./configure`).
+
+
+## Usage Instructions
+Once the installation is complete, a file called `ns` will be written to your installation prefix as well as the package directory. You should be able to run `./ns` and see:
+```
+%
+```
+which indicates a successful installation. Hit Ctrl-C to exit.
+
+

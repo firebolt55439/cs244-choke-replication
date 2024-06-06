@@ -1,7 +1,7 @@
-#
+# 
 #  Copyright (c) 1999 by the University of Southern California
 #  All rights reserved.
-#
+# 
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License,
 #  version 2, as published by the Free Software Foundation.
@@ -44,9 +44,9 @@
 # $Header: /cvsroot/nsnam/ns-2/indep-utils/cmu-scen-gen/setdest/Makefile.in,v 1.12 2005/09/16 03:05:40 tomh Exp $
 
 # Top level hierarchy
-prefix	= /usr/local
+prefix	= /tmp/ns-prefix
 # Pathname of directory to install the binary
-BINDEST	= /usr/local/bin
+BINDEST	= /tmp/ns-prefix/bin
 
 CCX = g++
 CC = gcc
@@ -54,9 +54,9 @@ MKDEP	= ../../../conf/mkdep
 
 # when including files from ns, we need to take care STL_NAMESPACE
 DEFINE = -Dstand_alone -DSTL_NAMESPACE=@STL_NAMESPACE@ -DCPP_NAMESPACE=std
-CFLAGS =  -Wall -Wno-write-strings
-LDFLAGS =
-LIBS =  -lpcap -lm -lm   -framework Cocoa
+CFLAGS =  -Wall -Wno-write-strings 
+LDFLAGS = 
+LIBS =  -lpcap -lm -framework Cocoa -lm 
 INSTALL = /opt/homebrew/bin/ginstall -c
 
 all: setdest calcdest

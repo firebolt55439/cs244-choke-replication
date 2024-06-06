@@ -125,6 +125,9 @@ sns.set_palette("inferno", n_colors=3)
 # increase font size
 sns.set(font_scale=1.5)
 
+# increase figure size
+plt.figure(figsize=(8, 6))
+
 # plot all 3 lines in same plot
 sns.lineplot(x="rate", y="avg_tcp", data=df, markers=True, label="TCP Queue Occupancy")
 sns.lineplot(x="rate", y="avg_udp", data=df, markers=True, label="UDP Queue Occupancy")

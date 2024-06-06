@@ -51,3 +51,12 @@ Once the installation is complete, a file called `ns` will be written to your in
 which indicates a successful installation. Hit Ctrl-C to exit.
 
 
+Now, run the following:
+```
+$ cd replication
+$ python sweep.py
+```
+
+which will generate the TCL network toplogies and run `ns2` automatically as appropriate (note that it uses binary path `../ns` for ns-2). The final figure will be written to `sweep.png` and should look as follows:
+
+![plot](./replication/sweep.png)

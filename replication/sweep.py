@@ -172,5 +172,5 @@ plt.xscale("log")
 # set y-axis limits to start from 0
 plt.ylim(0, None)
 
-plt.savefig("sweep.png")
+plt.savefig("output.png")
 plt.show()

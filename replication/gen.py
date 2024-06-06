@@ -44,6 +44,8 @@ Queue/CHOKe set thresh_queue_ {MIN_TH}
 Queue/CHOKe set maxthresh_ {MAX_TH}
 Queue/CHOKe set maxthresh_queue_ {MAX_TH}
 
+Queue/RED set bytes_ false
+Queue/RED set queue_in_bytes_ false
 Queue/RED set thresh_ {MIN_TH}
 Queue/RED set thresh_queue_ {MIN_TH}
 Queue/RED set maxthresh_ {MAX_TH}

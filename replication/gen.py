@@ -3,7 +3,8 @@ import sys
 NUM_NODES = 32
 # QUEUE_ALGORITHM = "DropTail"
 # QUEUE_ALGORITHM = "RED"
-QUEUE_ALGORITHM = "CHOKe"
+# QUEUE_ALGORITHM = "CHOKe"
+QUEUE_ALGORITHM = sys.argv[2]
 
 MIN_TH = 25
 MAX_TH = 50
@@ -42,6 +43,11 @@ Queue/CHOKe set thresh_ {MIN_TH}
 Queue/CHOKe set thresh_queue_ {MIN_TH}
 Queue/CHOKe set maxthresh_ {MAX_TH}
 Queue/CHOKe set maxthresh_queue_ {MAX_TH}
+
+Queue/RED set thresh_ {MIN_TH}
+Queue/RED set thresh_queue_ {MIN_TH}
+Queue/RED set maxthresh_ {MAX_TH}
+Queue/RED set maxthresh_queue_ {MAX_TH}
 """
 
 for i in range(1, NUM_NODES + 1):

@@ -1,4 +1,5 @@
 import os
+import sys
 import numpy as np
 from collections import defaultdict
 import matplotlib.pyplot as plt
@@ -9,6 +10,8 @@ import seaborn as sns
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
+
+QUEUE_ALGORITHM = "CHOKe" if len(sys.argv) < 2 else sys.argv[1]
 
 
 def parse_queue_file(queue_file):
@@ -112,7 +115,7 @@ outputs = []
 for rate in samples:
     print("\n\n")
     print(f"Testing arrival rate: {np.int32(np.round(rate))}Kbps")
-    os.system(f"python gen.py {rate}")
+    os.system(f"python gen.py {rate} {QUEUE_ALGORITHM}")
     os.system("rm *.out *.tr *.nam *.log 2>&1 > /dev/null 2>&1")
     os.system("../ns choke_32.tcl > /dev/null")
 
@@ -162,8 +165,8 @@ sns.lineplot(
 plt.legend()
 
 # plot title and axis labels
-plt.title("Queue Occupancy vs. UDP Arrival Rate Under CHOKe")
-# plt.title("Queue Occupancy vs. UDP Arrival Rate Under RED")
+# plt.title("Queue Occupancy vs. UDP Arrival Rate Under CHOKe")
+plt.title(f"Queue Occupancy vs. UDP Arrival Rate Under {QUEUE_ALGORITHM}")
 plt.xlabel("UDP Arrival Rate (Kbps)")
 plt.ylabel("Queue Size (# of packets)")
 # save figure please

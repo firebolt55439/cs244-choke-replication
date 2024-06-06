@@ -60,3 +60,10 @@ $ python sweep.py
 which will generate the TCL network toplogies and run `ns2` automatically as appropriate (note that it uses binary path `../ns` for ns-2). The final figure will be written to `output.png` and should look as follows:
 
 ![plot](./replication/output.png)
+
+To run for a different AQM algorithm (e.g. RED), do the following:
+```
+$ cd replication
+$ python sweep.py RED
+```
+replacing `RED` with any valid NS2 AQM algorithm of choice (case-sensitive).

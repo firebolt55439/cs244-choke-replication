@@ -5,6 +5,11 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
+# set CWD to script location
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
+
 
 def parse_queue_file(queue_file):
     queue_size = defaultdict(int)
@@ -116,33 +121,56 @@ for rate in samples:
 
 df = pd.DataFrame(outputs)
 
+# increase figure size
+plt.figure(figsize=(10, 8))
+
 # make seaborn plot look professional / academic, like a paper
-sns.set_theme(style="whitegrid")
+sns.set_style("whitegrid")
 
 # nicer color scheme
 sns.set_palette("inferno", n_colors=3)
 
 # increase font size
-sns.set(font_scale=1.5)
-
-# increase figure size
-plt.figure(figsize=(8, 6))
+plt.rc("font", size=16)
 
 # plot all 3 lines in same plot
-sns.lineplot(x="rate", y="avg_tcp", data=df, markers=True, label="TCP Queue Occupancy")
-sns.lineplot(x="rate", y="avg_udp", data=df, markers=True, label="UDP Queue Occupancy")
 sns.lineplot(
-    x="rate", y="avg_total", data=df, markers=True, label="Total Queue Occupancy"
+    x="rate",
+    y="avg_tcp",
+    data=df,
+    markers=True,
+    label="Average TCP Queue Size",
+    marker="o",
+)
+sns.lineplot(
+    x="rate",
+    y="avg_udp",
+    data=df,
+    markers=True,
+    label="Average UDP Queue Size",
+    marker="o",
+)
+sns.lineplot(
+    x="rate",
+    y="avg_total",
+    data=df,
+    markers=True,
+    label="Average FIFO Queue Size",
+    marker="o",
 )
 # add legend with custom labels
 plt.legend()
 
 # plot title and axis labels
 plt.title("Queue Occupancy vs. UDP Arrival Rate Under CHOKe")
-plt.title("Queue Occupancy vs. UDP Arrival Rate Under RED")
+# plt.title("Queue Occupancy vs. UDP Arrival Rate Under RED")
 plt.xlabel("UDP Arrival Rate (Kbps)")
-plt.ylabel("Queue Occupancy (packets)")
+plt.ylabel("Queue Size (# of packets)")
 # save figure please
 plt.xscale("log")
+
+# set y-axis limits to start from 0
+plt.ylim(0, None)
+
 plt.savefig("sweep.png")
 plt.show()
